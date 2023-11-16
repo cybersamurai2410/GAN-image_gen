@@ -19,7 +19,7 @@ def build_generator():
     model.add(LeakyReLU(alpha=0.2))
     model.add(Reshape((7, 7, 256)))
 
-    # Upsampling and Convolutional Blocks
+    # UpSampling and Convolutional Blocks
     model.add(UpSampling2D())
     model.add(Conv2D(256, kernel_size=3, padding='same'))
     model.add(BatchNormalization(momentum=0.8))
@@ -38,6 +38,37 @@ def build_generator():
 
     return model
 
+'''Discriminator'''
+def build_discriminator():
+    model = Sequential()
+
+    # Convolutional Blocks
+    model.add(Conv2D(32, kernel_size=3, strides=2, input_shape=(28, 28, 1), padding='same'))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.3))
+
+    model.add(Conv2D(64, kernel_size=3, strides=2, padding='same'))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.3))
+
+    model.add(Conv2D(128, kernel_size=3, strides=2, padding='same'))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.3))
+
+    model.add(Conv2D(256, kernel_size=3, strides=1, padding='same'))
+    model.add(BatchNormalization(momentum=0.8))
+    model.add(LeakyReLU(alpha=0.2))
+    model.add(Dropout(0.3))
+
+    # Flatten then pass to dense layer to perform binary classification real/fake
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
+
+    return model
+
+'''Generate Samples'''
 generator = build_generator()
 generator.summary()
 
@@ -48,3 +79,9 @@ for idx, img in enumerate(img):
     ax[idx].imshow(np.squeeze(img)) # Plot the image using a specific subplot
     ax[idx].title.set_text(idx) # Appending the image label as the plot title
 plt.show()
+
+discriminator = build_discriminator()
+discriminator.summary()
+
+img = img[0]
+discriminator.predict(img)
