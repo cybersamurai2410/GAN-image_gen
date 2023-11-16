@@ -23,14 +23,18 @@ for idx in range(4):
     ax[idx].title.set_text(sample['label']) # Appending the image label as the plot title
 plt.show()
 
+# Scales the pixel values of the images from the range [0, 255] to [0, 1]. This scaling is done by dividing each pixel value by 255.
 def scale_images(data):
     return data['image']/255
 
 ds = ds.map(scale_images) # Running the dataset through the scale_images preprocessing step
 ds = ds.cache() # Cache the dataset for that batch
-ds = ds.shuffle(60000) # Shuffle it up
+ds = ds.shuffle(60000) # Shuffle data
 ds = ds.batch(128) # Batch into 128 images per sample
-ds = ds.prefetch(64) # Reduces the likelihood of bottlenecking
+ds = ds.prefetch(64) # While the model is training on the current batch, the next batch is already being loaded and prepared.
 
 print(ds.as_numpy_iterator().next().shape)
-tf.data.experimental.save(ds, 'preprocessed_dataset.tfrecord')
+
+save_directory = 'preprocessed_data'
+tf.data.experimental.save(ds, save_directory)
+
