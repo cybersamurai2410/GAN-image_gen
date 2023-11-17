@@ -37,4 +37,3 @@ print(ds.as_numpy_iterator().next().shape)
 
 save_directory = 'preprocessed_data'
 tf.data.experimental.save(ds, save_directory)
-

@@ -1,14 +1,8 @@
-import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, Reshape, LeakyReLU, Dropout, UpSampling2D, BatchNormalization
-
-load_directory = 'preprocessed_data'
-image_shape = (128, 28, 28, 1)
-dataset_structure = tf.TensorSpec(shape=image_shape, dtype=tf.float32)
-ds = tf.data.experimental.load(load_directory, dataset_structure)
 
 '''Generator'''
 def build_generator():
@@ -68,33 +62,34 @@ def build_discriminator():
 
     return model
 
-'''Generate Samples'''
-generator = build_generator()
-generator.summary()
+if __name__ == "__main__":
+    '''Generate Samples'''
+    generator = build_generator()
+    generator.summary()
 
-# Generate 4 random noise samples and use the generator to create images
-img = generator.predict(np.random.randn(4, 128))
-print("Generated image shape:", img.shape)
-fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
-for idx, img in enumerate(img):
-    ax[idx].imshow(np.squeeze(img)) # Plot the image using a specific subplot
-    ax[idx].title.set_text(idx) # Appending the image label as the plot title
-plt.show()
+    # Generate 4 random noise samples and use the generator to create images
+    img = generator.predict(np.random.randn(4, 128))
+    print("Generated image shape:", img.shape)
+    fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
+    for idx, img in enumerate(img):
+        ax[idx].imshow(np.squeeze(img)) # Plot the image using a specific subplot
+        ax[idx].title.set_text(idx) # Appending the image label as the plot title
+    plt.show()
 
-discriminator = build_discriminator()
-discriminator.summary()
+    discriminator = build_discriminator()
+    discriminator.summary()
 
-for idx, image in enumerate(img):
-    # Reshape the image to add a batch dimension (1, height, width, channels)
-    image_batch = np.expand_dims(image, axis=0)
+    for idx, image in enumerate(img):
+        # Reshape the image to add a batch dimension (1, height, width, channels)
+        image_batch = np.expand_dims(image, axis=0)
 
-    # Make a prediction with the discriminator
-    prediction = discriminator.predict(image_batch)
-    print(f"Discriminator's prediction on Sample {idx + 1}: {prediction[0][0]}")
+        # Make a prediction with the discriminator
+        prediction = discriminator.predict(image_batch)
+        print(f"Discriminator's prediction on Sample {idx + 1}: {prediction[0][0]}")
 
-    '''
-    Discriminator's prediction on Sample 1: 0.5189899802207947
-    Discriminator's prediction on Sample 2: 0.5189804434776306
-    Discriminator's prediction on Sample 3: 0.5189709663391113
-    Discriminator's prediction on Sample 4: 0.518961489200592
-    '''
+        '''
+        Discriminator's prediction on Sample 1: 0.5189899802207947
+        Discriminator's prediction on Sample 2: 0.5189804434776306
+        Discriminator's prediction on Sample 3: 0.5189709663391113
+        Discriminator's prediction on Sample 4: 0.518961489200592
+        '''
