@@ -3,7 +3,7 @@ Image generation using GANs (generative adversarial networks) using Fashion MNIS
 
 ![dcgan](https://github.com/cybersamurai2410/GAN-image_gen/assets/66138996/38f48573-f68c-4d54-85b1-40da0d8618c6)
 
-## DGAN Model Architecture
+## GAN Model Architecture
 **Generator:**<br>
 <img width="418" alt="image" src="https://github.com/cybersamurai2410/GAN-image_gen/assets/66138996/bb77228e-6213-495d-bdaa-bc7f3ad3d1e8">
 
